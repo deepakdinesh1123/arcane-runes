@@ -13,12 +13,19 @@
         inherit system;
         config.allowUnfree = true;
       };
-
-      devShells.default = with pkgs; mkShell {
-          buildInputs = [ go ];
-      };
     };
     flake = {
+      templates = {
+        go = {
+          path = ./go;
+          description = "Go template";
+        };
+
+        rust = {
+          path = ./rust;
+          description = "Rust template";
+        }
+      };
     };
   };
 }
