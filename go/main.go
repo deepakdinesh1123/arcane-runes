@@ -1,7 +1,13 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/google/uuid"
+)
 
 func main() {
-	fmt.Println("Hello World")
+	// Generate a new UUID
+	newUUID := uuid.New()
+	fmt.Println("Generated UUID:", newUUID.String())
 }
