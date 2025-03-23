@@ -1,30 +1,70 @@
 {
-  inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-24.11";
-    flake-parts.url = "github:hercules-ci/flake-parts";
-  };
+  description = "Arcane Runes";
 
-  outputs = inputs: inputs.flake-parts.lib.mkFlake { inherit inputs; } {
-    systems = [ "x86_64-linux" "aarch64-darwin" "x86_64-darwin" "aarch64-linux" ];
-    imports = [
-    ];
-    perSystem = { self', pkgs, lib, system, ... }: {
-      _module.args.pkgs = import inputs.nixpkgs {
-        inherit system;
-        config.allowUnfree = true;
-      };
+  outputs = {self}: let
+    mkWelcomeText = {
+      name,
+      description,
+      path,
+      buildTools ? null,
+      additionalSetupInfo ? null,
+    }: {
+      inherit path;
+
+      description = name;
+
+      welcomeText = ''
+        # ${name}
+        ${description}
+
+        ${
+          if buildTools != null
+          then ''
+            Comes bundled with:
+            ${builtins.concatStringsSep ", " buildTools}
+          ''
+          else ""
+        }
+        ${
+          if additionalSetupInfo != null
+          then ''
+            ## Additional Setup
+            To set up the project run:
+            ```sh
+            flutter create .
+            ```
+          ''
+          else ""
+        }
+        ## Other tips
+        If you use direnv run:
+
+        ```
+            echo "use flake" > .envrc
+        ```
+      '';
     };
-    flake = {
-      templates = {
-        go = {
-          path = ./go;
-          description = "Go template";
-        };
-
-        rust = {
-          path = ./rust;
-          description = "Rust template";
-        };
+  in {
+    templates = {
+      rust = mkWelcomeText {
+        path = ./rust;
+        name = "Rust Template";
+        description = ''
+          A basic rust application template with a package build.
+        '';
+        buildTools = [
+          "All essential rust tools"
+          "rust-analyzer"
+        ];
+      };
+      go = mkWelcomeText {
+        path = ./go;
+        name = "Go template";
+        description = "A basic go project";
+        buildTools = [
+          "go"
+          "gopls"
+        ];
       };
     };
   };
