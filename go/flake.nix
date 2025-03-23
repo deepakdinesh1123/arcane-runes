@@ -19,6 +19,12 @@
       };
     };
     flake = {
+      templates = {
+        default = {
+          path = ./.;
+          description = "Go template";
+        }
+      };
     };
   };
 }
