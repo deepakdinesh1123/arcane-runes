@@ -47,7 +47,7 @@
           default = pkgs.buildGoModule rec {
             pname = "gorune";
             version = "0.0.1";
-            vendorHash = "";
+            vendorHash = "sha256-mGKxBRU5TPgdmiSx0DHEd0Ys8gsVD/YdBfbDdSVpC3U=";
 
             src = ./.;
 
